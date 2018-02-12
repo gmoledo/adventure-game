@@ -137,24 +137,24 @@ function Player()
       this.y = Math.round(this.y);
       this.walkFrame = 0;
 
-      if (this.x < 0 || this.x >= canvas.width)
+      this.tileX += this.dir.x;
+      this.tileY += this.dir.y;
+
+      if (this.tileX < 0 || this.tileX >= currentRoom.cols)
       {
-        this.x = (this.x < 0) ? canvas.width : 0-TILE_SIZE;
-        this.tileX = this.x == -TILE_SIZE ? -1 : currentRoom.cols;
+        this.x = (this.tileX <= 0) ? canvas.width : 0-TILE_SIZE;
+        this.tileX = (this.tileX <= 0) ? currentRoom.cols : -1;
         changeRoom(this.tileX, this.tileY);
       }
-      else if (this.y < 0 || this.y >= canvas.height)
+      else if (this.tileY < 0 || this.tileY >= currentRoom.rows)
       {
-        this.y = (this.y < 0) ? canvas.height : 0-TILE_SIZE;
-        this.tileY = this.y == 0-TILE_SIZE ? -1 : currentRoom.rows;
+        this.y = (this.tileY <= 0) ? canvas.height : 0-TILE_SIZE;
+        this.tileY = (this.tileY <= 0) ? currentRoom.rows : -1;
         changeRoom(this.tileX, this.tileY);
       }
       else
       {
         this.state = states.STAND;
-
-        this.tileX += this.dir.x;
-        this.tileY += this.dir.y;
       }
 
     }
