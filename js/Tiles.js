@@ -12,11 +12,11 @@ tileToImageIdMap.set(TILE_GROUND,  images.ground);
 tileToImageIdMap.set(TILE_WALL,    images.wall);
 tileToImageIdMap.set(TILE_SAND,    images.sand);
 
-function tileXYToTileGrid(tileX,  tileY)
+function tileXYToTileGrid(room, tileX,  tileY)
 {
-  if (tileX > COLS-1 || tileX < 0 || tileY > ROWS-1 || tileY < 0)
+  if (tileX > room.cols-1 || tileX < 0 || tileY > room.rows-1 || tileY < 0)
     return undefined;
-  return tileY*COLS + tileX;
+  return tileY*room.cols + tileX;
 }
 
 function updateTiles()
@@ -30,12 +30,13 @@ function drawTiles()
   var tileLeftEdgeX = 0;
   var tileTopEdgeY = 0;
 
-  for (var row=0; row<ROWS; row++)
+  for (var row=0; row<currentRoom.rows; row++)
   {
     tileLeftEdgeX = 0;
 
-    for (var col=0; col<COLS; col++)
+    for (var col=0; col<currentRoom.cols; col++)
     {
+     
       var tileType = currentRoom.grid[tileIndex];
       var tileImageId = tileToImageIdMap.get(tileType);
       var tileImage = imageMap.get(tileImageId);

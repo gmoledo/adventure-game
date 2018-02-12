@@ -140,13 +140,13 @@ function Player()
       if (this.x < 0 || this.x >= canvas.width)
       {
         this.x = (this.x < 0) ? canvas.width : 0-TILE_SIZE;
-        this.tileX = this.x == -TILE_SIZE ? -1 : COLS;
+        this.tileX = this.x == -TILE_SIZE ? -1 : currentRoom.cols;
         changeRoom(this.tileX, this.tileY);
       }
       else if (this.y < 0 || this.y >= canvas.height)
       {
         this.y = (this.y < 0) ? canvas.height : 0-TILE_SIZE;
-        this.tileY = this.y == 0-TILE_SIZE ? -1 : ROWS;
+        this.tileY = this.y == 0-TILE_SIZE ? -1 : currentRoom.rows;
         changeRoom(this.tileX, this.tileY);
       }
       else
@@ -165,7 +165,7 @@ function Player()
     var nextTileX = this.tileX + this.dir.x;
     var nextTileY = this.tileY + this.dir.y;
     
-    var nextTileInGrid = tileXYToTileGrid(nextTileX, nextTileY);  // tileXYToTileGrid() -> tiles.js
+    var nextTileInGrid = tileXYToTileGrid(currentRoom, nextTileX, nextTileY);  // tileXYToTileGrid() -> tiles.js
 
     if (nextTileInGrid == undefined)
     {

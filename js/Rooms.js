@@ -1,14 +1,12 @@
-const COLS = 20;
-const ROWS = 15;
-
-
 var rooms = [];
 var currentRoom = [];
 
-function Room(name, grid, doors)
+function Room(name, grid, cols, rows, doors)
 {
   this.name = name;
   this.grid = grid;
+  this.cols = cols;
+  this.rows = rows;
   this.doors = doors;
 
   rooms.push(this);
@@ -40,8 +38,8 @@ function changeRoom(tileX, tileY)
       }
       else if (typeof door.xFlags == "number")
       {
-        if (door.xFlags == COLS && tileX == -1 ||
-            door.xFlags == 0    && tileX == COLS)
+        if (door.xFlags == currentRoom.cols && tileX == -1 ||
+            door.xFlags == 0    && tileX == currentRoom.cols)
         {
           xPass = true;
         }
@@ -67,8 +65,8 @@ function changeRoom(tileX, tileY)
       }
       else if (typeof door.yFlags == "number")
       {
-        if (door.yFlags == ROWS && tileY == -1 ||
-            door.yFlags == 0    && tileY == ROWS)
+        if (door.yFlags == currentRoom.rows && tileY == -1 ||
+            door.yFlags == 0    && tileY == currentRoom.rows)
         {
           yPass = true;
         }
@@ -123,9 +121,9 @@ new Room(
   10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,
   10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,
   10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10
-],
+], 20, 15,
 [
-  new Door("2", COLS)
+  new Door("2", 20)
 ]
 );
 
@@ -148,12 +146,12 @@ new Room(
   10,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
   10,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  10,
   10,  10,  10,  10,  10,  10,  10,  10,   0,   0,   0,   0,  10,  10,  10,  10,  10,  10,  10,  10
-],
+], 20, 15,
 [
   new Door("1", 0),
-  new Door("3", COLS, [2, 4]),
-  new Door("4", undefined, ROWS),
-  new Door("5", COLS, [10, 12])
+  new Door("3", 20, [2, 4]),
+  new Door("4", undefined, 15),
+  new Door("5", 20, [10, 12])
 ]
 );
 
@@ -175,7 +173,7 @@ new Room(
   10,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  10,
   10,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  10,
   10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10
-],
+], 20, 15,
 [
   new Door("2", 0)
 ]
@@ -199,7 +197,7 @@ new Room(
   10,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  10,
   10,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  10,
   10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10
-],
+], 20, 15,
 [
   new Door("2", undefined, 0)
 ]
@@ -223,10 +221,10 @@ new Room(
    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
   10,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
   10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10
-],
+], 20, 15,
 [
   new Door("2", 0),
-  new Door("Turn to Sand", COLS)
+  new Door("Turn to Sand", 20)
 ]
 );
 
@@ -248,7 +246,7 @@ new Room(
    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   0,   0,   0,   0,   1,   1,   1,
    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   1,
   10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10,  10
-],
+], 20, 15,
 [
   new Door("5", 0)
 ]
