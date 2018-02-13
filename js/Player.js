@@ -130,33 +130,28 @@ function Player()
 
     if (this.walkFrame >= this.walkTime)
     {
-      var frameVsTimeDiff = this.walkFrame-this.walkTime;
-      this.x -= this.dir.x * this.speed * frameVsTimeDiff;
-      this.y -= this.dir.y * this.speed * frameVsTimeDiff;
-      this.x = Math.round(this.x);
-      this.y = Math.round(this.y);
-      this.walkFrame = 0;
-
       this.tileX += this.dir.x;
       this.tileY += this.dir.y;
+      this.x = this.tileX * TILE_SIZE;
+      this.y = this.tileY * TILE_SIZE;
+      this.walkFrame = 0;
 
       if (this.tileX < 0 || this.tileX >= currentRoom.cols)
       {
-        this.x = (this.tileX <= 0) ? canvas.width : 0-TILE_SIZE;
-        this.tileX = (this.tileX <= 0) ? currentRoom.cols : -1;
         changeRoom(this.tileX, this.tileY);
+        this.tileX = (this.tileX <= 0) ? currentRoom.cols : -1;
+        this.x = this.tileX * TILE_SIZE;
       }
       else if (this.tileY < 0 || this.tileY >= currentRoom.rows)
       {
-        this.y = (this.tileY <= 0) ? canvas.height : 0-TILE_SIZE;
-        this.tileY = (this.tileY <= 0) ? currentRoom.rows : -1;
         changeRoom(this.tileX, this.tileY);
+        this.tileY = (this.tileY <= 0) ? currentRoom.rows : -1;
+        this.y = this.tileY * TILE_SIZE;
       }
       else
       {
         this.state = states.STAND;
       }
-
     }
   }
 
