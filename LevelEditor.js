@@ -16,15 +16,15 @@ wall.src = "images/tile_wall.png";
 tiles = [];
 
 const TILE_SIZE = 32;
-const ROWS = 19;
-const COLS = 20;
+var rows = 15;
+var cols = 20;
 
 const TILE_GROUND = 0;
 const TILE_SAND = 1;
 const TILE_WALL = 10;
 
 var tileGrid = [];
-for (var i=0; i<ROWS*COLS; i++)
+for (var i=0; i<rows*cols; i++)
 {
   tileGrid[i] = TILE_GROUND;
 }
@@ -91,7 +91,7 @@ function drawTileGrid()
 {
   for (var i=0; i<tileGrid.length; i++)
   {
-    cc.drawImage(tileMap.get(tileGrid[i]), 200+i%COLS*TILE_SIZE, Math.floor(i/COLS)*TILE_SIZE);
+    cc.drawImage(tileMap.get(tileGrid[i]), 200+i%cols*TILE_SIZE, Math.floor(i/cols)*TILE_SIZE);
   }
 }
 
@@ -162,9 +162,9 @@ function mousePosToTileGrid(mousePos)
 {
   var tileX = Math.floor((mousePos.x - 200) / TILE_SIZE);
   var tileY = Math.floor(mousePos.y / TILE_SIZE);
-  if (tileX >= COLS || tileY >= ROWS)
+  if (tileX >= cols || tileY >= rows)
     return undefined;
-  return tileY * COLS + tileX;
+  return tileY * cols + tileX;
 }
 
 function onMouseMove(e)
@@ -199,17 +199,28 @@ function getMousePos(evt) {
 
 function buttonPressed()
 {
-  var tgString = tileGrid.toString();
-  var tgArray = tgString.split(",");
   var tgElement = 0;
   var elementLength = 0;
+
   var textArea = document.getElementById("levelInfo");
-  textArea.value = "[\n"
-  for (var i=0; i<ROWS; i++)
+  var roomName = document.getElementById("roomName").value;
+
+  var doorNames = document.getElementById("doorNames").value;
+  var doorXFlags = document.getElementById("doorXFlags").value;
+  var doorYFlags = document.getElementById("doorYFlags").value;
+
+  var doorNamesArray = doorNames.split(",");
+  var doorXFlagsArray = doorXFlags.split("|");
+  var doorYFlagsArray = doorYFlags.split("|");
+
+  textArea.value = "new Room(\n\t";
+  textArea.value += "\"" + roomName + "\", "+cols+", "+rows+",\n\t";
+  textArea.value += "[\n\t";
+  for (var i=0; i<rows; i++)
   {
-    for (var j=0; j<COLS; j++)
+    for (var j=0; j<cols; j++)
     {
-      tgElement = tileGrid[i*COLS + j].toString();
+      tgElement = tileGrid[i*cols + j].toString();
       elementLength = tgElement.length;
       for (var k=0; k<4-elementLength; k++)
       {
@@ -217,10 +228,23 @@ function buttonPressed()
       }
       textArea.value += tgElement+",";
     }
-    textArea.value += "\n";
+    textArea.value += "\n\t";
   }
-  textArea.value = textArea.value.substr(0, textArea.value.length-2)+"\n";
-  textArea.value += "]";
+  textArea.value = textArea.value.substr(0, textArea.value.length-3)+"\n\t";
+  textArea.value += "],\n\t";
+  textArea.value += "[\n\t\t";
+  for (var i=0; i<doorNamesArray.length; i++)
+  {
+    textArea.value += "new Door(";
+    textArea.value += "\""+doorNamesArray[i]+"\", ";
+    textArea.value += doorXFlagsArray[i]+", ";
+    if (i < doorNamesArray.length-1)
+      textArea.value += doorYFlagsArray[i]+"),\n\t\t";
+    else
+      textArea.value += doorYFlagsArray[i]+")\n\t";
+  }
+  textArea.value += "]\n";
+  textArea.value += ");";
 }
 
 function copyInfo()
@@ -229,4 +253,14 @@ function copyInfo()
   copyText.select();
   document.execCommand("Copy");
   alert("Copied Level Info to clipboard");
+}
+
+function getRowsAndCols()
+{
+  rows = document.getElementById("rows").value;
+  cols = document.getElementById("cols").value;
+  for (var i=0; i<rows*cols; i++)
+  {
+    tileGrid[i] = TILE_GROUND;
+  }
 }

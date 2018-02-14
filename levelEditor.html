@@ -3,13 +3,41 @@
 <head>
   <title>Level Editor</title>
 </head>
-<body style="position:fixed;overflow-y:scroll;width:100%">
-  <canvas id="editCanvas" width="1000" height="600" style="display:inline; float:left"></canvas>
-<div style="">
-  <button onclick="buttonPressed()" style="display:block">Get Level Info</button>
-  <textarea id="levelInfo" rows="10" cols="20" style="display:block;"></textarea>
-  <button onclick="copyInfo()" style="display:block">Copy to Clipboard</button>
-</div>
+<body >
+
+  <div height="700">
+    <canvas id="editCanvas" width="1000" height="640" style=" float:left; margin-right:10px"></canvas>
+
+    <div style="margin-left:5px">
+      <p style="display:inline-block">Room Name: </p>
+      <input type="text" id="roomName" style="display:inline-block">
+      <br>
+      <p style="display:inline-block">Room Width: </p>
+      <input type="number" id="cols" min="1" max="25" value="20">
+      <br>
+      <p style="display:inline-block">Room Height: </p>
+      <input type="number" id="rows" min="1" max="20" value="15" style="display:inline-block">
+      <button onclick="getRowsAndCols()">Apply Dimensions</button>
+      <br>
+
+      <p style="display:inline-block">Door Names</p>
+      <input type="text" id="doorNames">
+      <br>
+
+      <p style="display:inline-block">Door xFlags</p>
+      <input type="text" id="doorXFlags">
+      <br>
+      <p style="display:inline-block">Door yFlags</p>
+      <input type="text" id="doorYFlags">
+    </div>
+  </div>      
+  <div style="float:left">
+    <button onclick="buttonPressed()" style="display:block;margin-top:5px">Get Level Info</button>
+
+    <textarea id="levelInfo" rows="10" cols="20" style="display:block"></textarea>
+
+    <button onclick="copyInfo()" style="display:block">Copy to Clipboard</button>
+  </div>
   <script src="LevelEditor.js"></script>
 </body>
 </html>

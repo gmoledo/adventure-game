@@ -1,6 +1,6 @@
 var player = new Player();
 
-const WALK_TIME_MULTIPLIER = 1/9;
+const WALK_TIME_MULTIPLIER = 1/3;
 
 function Player()
 {
