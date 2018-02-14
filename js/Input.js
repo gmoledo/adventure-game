@@ -83,7 +83,7 @@ function refreshKeyInput(evt, controllable)
         default:                console.log("Shouldn't show this! movementQueue not filtered properly.");
       }
     }
-    console.log(inputQueue);
+
     if (inputQueue[0] == cPlayer.toggleKey)
     {
       cPlayer.switchControlSchemes();

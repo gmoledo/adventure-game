@@ -124,29 +124,40 @@ function Player()
 
   this.walkStateLogic = function()
   {
-    this.x += this.dir.x * this.speed;
-    this.y += this.dir.y * this.speed;
+    var dx = this.dir.x * this.speed;
+    var dy = this.dir.y * this.speed;
+
+    this.x += dx;
+    this.y += dy;
+
+    camera.translateCanvas(dx, dy);
+    
     this.walkFrame++;
 
     if (this.walkFrame >= this.walkTime)
     {
       this.tileX += this.dir.x;
       this.tileY += this.dir.y;
+      
       this.x = this.tileX * TILE_SIZE;
       this.y = this.tileY * TILE_SIZE;
+
       this.walkFrame = 0;
+
 
       if (this.tileX < 0 || this.tileX >= currentRoom.cols)
       {
         changeRoom(this.tileX, this.tileY);
         this.tileX = (this.tileX <= 0) ? currentRoom.cols : -1;
         this.x = this.tileX * TILE_SIZE;
+        camera.setCanvasPosition();
       }
       else if (this.tileY < 0 || this.tileY >= currentRoom.rows)
       {
         changeRoom(this.tileX, this.tileY);
         this.tileY = (this.tileY <= 0) ? currentRoom.rows : -1;
         this.y = this.tileY * TILE_SIZE;
+        camera.setCanvasPosition();
       }
       else
       {
@@ -181,31 +192,31 @@ function Player()
 
   this.draw = function()
   {
-    if (this.state == states.WALK)
-    {
-      var frames;
-      if (this.dir.x == 0 && this.dir.y == 1)  frames = images.playerWalkSouth;
-      if (this.dir.x == 0 && this.dir.y == -1) frames = images.playerWalkNorth;
-      if (this.dir.x == 1 && this.dir.y == 0)  frames = images.playerWalkEast;
-      if (this.dir.x == -1 && this.dir.y == 0) frames = images.playerWalkWest;
+    // if (this.state == states.WALK)
+    // {
+    //   var frames;
+    //   if (this.dir.x == 0 && this.dir.y == 1)  frames = images.playerWalkSouth;
+    //   if (this.dir.x == 0 && this.dir.y == -1) frames = images.playerWalkNorth;
+    //   if (this.dir.x == 1 && this.dir.y == 0)  frames = images.playerWalkEast;
+    //   if (this.dir.x == -1 && this.dir.y == 0) frames = images.playerWalkWest;
 
-      var animLength = this.walkCycleFramePattern.length
-      var animFrameIndex = Math.floor(this.walkFrame/this.walkTime * animLength); 
-      var animFrame = this.walkCycleFramePattern[animFrameIndex];
-      this.sprite = imageMap.get(frames[animFrame]);
-    }
+    //   var animLength = this.walkCycleFramePattern.length
+    //   var animFrameIndex = Math.floor(this.walkFrame/this.walkTime * animLength); 
+    //   var animFrame = this.walkCycleFramePattern[animFrameIndex];
+    //   this.sprite = imageMap.get(frames[animFrame]);
+    // }
 
-    if (this.state == states.STAND)
-    {
-      var firstFrame;
-      if (this.dir.x == 0 && this.dir.y == 1)   firstFrame = images.playerWalkSouth[0];
-      if (this.dir.x == 0 && this.dir.y == -1)  firstFrame = images.playerWalkNorth[0];
-      if (this.dir.x == 1 && this.dir.y == 0)   firstFrame = images.playerWalkEast[0];
-      if (this.dir.x == -1 && this.dir.y == 0)  firstFrame = images.playerWalkWest[0];
+    // if (this.state == states.STAND)
+    // {
+    //   var firstFrame;
+    //   if (this.dir.x == 0 && this.dir.y == 1)   firstFrame = images.playerWalkSouth[0];
+    //   if (this.dir.x == 0 && this.dir.y == -1)  firstFrame = images.playerWalkNorth[0];
+    //   if (this.dir.x == 1 && this.dir.y == 0)   firstFrame = images.playerWalkEast[0];
+    //   if (this.dir.x == -1 && this.dir.y == 0)  firstFrame = images.playerWalkWest[0];
 
-      this.sprite = imageMap.get(firstFrame);
+    //   this.sprite = imageMap.get(firstFrame);
 
-    }
+    // }
 
     canvasContext.drawImage(this.sprite, this.x, this.y);
   }

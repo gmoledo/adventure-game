@@ -1,5 +1,5 @@
 
-const TILE_SIZE = 40;
+const TILE_SIZE = 32;
 
 const TILE_GROUND = 0;
 const TILE_SAND   = 1;
@@ -36,7 +36,7 @@ function drawTiles()
 
     for (var col=0; col<currentRoom.cols; col++)
     {
-     
+
       var tileType = currentRoom.grid[tileIndex];
       var tileImageId = tileToImageIdMap.get(tileType);
       var tileImage = imageMap.get(tileImageId);

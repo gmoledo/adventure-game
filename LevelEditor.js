@@ -15,8 +15,8 @@ wall.src = "images/tile_wall.png";
 
 tiles = [];
 
-const TILE_SIZE = 40;
-const ROWS = 15;
+const TILE_SIZE = 32;
+const ROWS = 19;
 const COLS = 20;
 
 const TILE_GROUND = 0;
@@ -101,7 +101,7 @@ function drawBorder(x, y)
   var borderY = y - 2;
   cc.fillStyle = "black";
   cc.lineWidth = 2;
-  cc.strokeRect(borderX, borderY, 44, 44);
+  cc.strokeRect(borderX, borderY, TILE_SIZE+4, TILE_SIZE+4);
 }
 
 function Tile()
@@ -151,7 +151,7 @@ function onMouseDown(e)
   {
     var tile = mousePosToTileGrid(mousePos);
     //console.log(tile);
-    if (brush != -1)
+    if (brush != -1 && tile != undefined)
     {
       tileGrid[tile] = brush;
     }
@@ -161,9 +161,9 @@ function onMouseDown(e)
 function mousePosToTileGrid(mousePos)
 {
   var tileX = Math.floor((mousePos.x - 200) / TILE_SIZE);
-  console.log(tileX);
   var tileY = Math.floor(mousePos.y / TILE_SIZE);
-  console.log(tileY);
+  if (tileX >= COLS || tileY >= ROWS)
+    return undefined;
   return tileY * COLS + tileX;
 }
 

@@ -23,6 +23,7 @@ function startGame()
   initInput();
   player.init("Earl");
   menu.init();
+  camera.init();
   currentRoom = rooms[0];
 
   setInterval(mainLoop, 1000/fps);
@@ -35,7 +36,6 @@ function mainLoop()
   {
     player.update();
 
-    updateTiles(); // Tiles.js
     drawTiles(); // Tiles.js
     player.draw();
   }

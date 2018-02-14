@@ -4,10 +4,10 @@
   <title>Level Editor</title>
 </head>
 <body style="position:fixed;overflow-y:scroll;width:100%">
-  <canvas id="editCanvas" width="1000" height="600"></canvas>
-<div>
+  <canvas id="editCanvas" width="1000" height="600" style="display:inline; float:left"></canvas>
+<div style="">
   <button onclick="buttonPressed()" style="display:block">Get Level Info</button>
-  <textarea id="levelInfo" rows="17" cols="120"></textarea>
+  <textarea id="levelInfo" rows="10" cols="20" style="display:block;"></textarea>
   <button onclick="copyInfo()" style="display:block">Copy to Clipboard</button>
 </div>
   <script src="LevelEditor.js"></script>
