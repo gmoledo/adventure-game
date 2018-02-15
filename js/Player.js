@@ -130,7 +130,6 @@ function Player()
     this.x += dx;
     this.y += dy;
 
-    console.log(camera.translation.y);
     camera.translateCanvas(dx, dy);
     
     this.walkFrame++;
@@ -145,6 +144,10 @@ function Player()
 
       camera.translation.x = Math.round(camera.translation.x);
       camera.translation.y = Math.round(camera.translation.y);
+      
+      canvasContext.setTransform(1,0,0,1,0,0);
+      canvasContext.translate(-camera.translation.x, -camera.translation.y);
+
       this.walkFrame = 0;
 
 
