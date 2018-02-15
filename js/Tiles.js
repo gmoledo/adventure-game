@@ -3,6 +3,8 @@ const TILE_SIZE = 32;
 
 const TILE_GROUND = 0;
 const TILE_SAND   = 1;
+const TILE_GRASS = 2;
+const TILE_DIRT = 3;
 const GROUND_CAP = 9;
 
 const TILE_WALL   = 10;
@@ -11,6 +13,8 @@ var tileToImageIdMap = new Map();
 tileToImageIdMap.set(TILE_GROUND,  images.ground);
 tileToImageIdMap.set(TILE_WALL,    images.wall);
 tileToImageIdMap.set(TILE_SAND,    images.sand);
+tileToImageIdMap.set(TILE_GRASS,   images.grass);
+tileToImageIdMap.set(TILE_DIRT,    images.dirt);
 
 function tileXYToTileGrid(room, tileX,  tileY)
 {

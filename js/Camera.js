@@ -23,17 +23,23 @@ function Camera()
         var leftEdgeDistance = this.target.tileX;
         var bottomEdgeDistance = currentRoom.rows-1-this.target.tileY;
         var topEdgeDistance = this.target.tileY;
-        console.log(rightEdgeDistance);
-        console.log(leftEdgeDistance);
-        console.log(canvasTileWidth/2);
         if (rightEdgeDistance >= Math.floor(canvasTileWidth/2) && 
             leftEdgeDistance >= Math.floor(canvasTileWidth/2))
         {
-            console.log("Tiles away from edges");
-            if (!(this.translation.x + canvas.width+dx > currentRoom.cols * TILE_SIZE) &&
-                !(this.translation.x + dx < 0))
+
+            if (Math.round(this.translation.x + canvas.width+dx) > currentRoom.cols * TILE_SIZE)
             {
-                console.log("Translating");
+                this.translation.x = currentRoom.cols * TILE_SIZE - canvas.width;
+                canvasContext.setTransform(1,0,0,1,0,0);
+                canvasContext.translate(-this.translation.x, -this.translation.y);
+            }
+            else if (Math.round(this.translation.x + dx) < 0)
+            {
+                this.translation.x = 0;
+                canvasContext.setTransform(1,0,0,1,0,0);
+                canvasContext.translate(-this.translation.x, -this.translation.y);
+            }
+            else{
                 canvasContext.translate(-dx, 0);
                 this.translation.x += dx
             }
@@ -42,12 +48,22 @@ function Camera()
 
         if (bottomEdgeDistance >= Math.floor(canvasTileHeight/2) &&
             topEdgeDistance >= Math.floor(canvasTileHeight/2))
-        {
-            if (!(this.translation.y + canvas.height+dy > currentRoom.rows * TILE_SIZE) &&
-                !(this.translation.y + dy < 0))
+        {            //console.log("D");
+            if (Math.round(this.translation.y + canvas.height+dy) > currentRoom.rows * TILE_SIZE)
             {
+                this.translation.y = currentRoom.rows * TILE_SIZE - canvas.height;
+                canvasContext.setTransform(1,0,0,1,0,0);
+                canvasContext.translate(-this.translation.x, -this.translation.y);
+            }
+            else if (Math.round(this.translation.y + dy) < 0)
+            {
+                this.translation.y = 0;
+                canvasContext.setTransform(1,0,0,1,0,0);
+                canvasContext.translate(-this.translation.x, -this.translation.y);
+            }
+            else{
                 canvasContext.translate(0, -dy);
-                this.translation.y += dy;
+                this.translation.y += dy
             }
         }
     }
@@ -87,9 +103,11 @@ function Camera()
         console.log(this.tileY - Math.ceil(this.tileHeight/2));
         var canvasPosY = -(this.tileY - Math.floor(this.tileHeight/2)) * TILE_SIZE;
 
-        canvasContext.translate(canvasPosX, canvasPosY);
-        this.translation.x = -canvasPosX;
-        this.translation.y = -canvasPosY;
+        canvasContext.translate(Math.round(canvasPosX), Math.round(canvasPosY));
+        this.translation.x = -Math.round(canvasPosX);
+        this.translation.y = -Math.round(canvasPosY);
+        console.log(this.translation.y)
+
     }
 }
 

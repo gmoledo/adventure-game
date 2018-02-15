@@ -17,7 +17,9 @@ images =
                     "character_player_walk_west_2.png"],
   ground: "tile_ground.png",
   sand:   "tile_sand.png",
-  wall:   "tile_wall.png"
+  wall:   "tile_wall.png",
+  grass:  "tile_grass.png",
+  dirt:   "tile_dirt.png"
 };
 
 // Reference image elements through imageMap

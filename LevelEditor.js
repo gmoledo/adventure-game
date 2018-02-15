@@ -11,7 +11,10 @@ var sand = document.createElement("img");
 sand.src = "images/tile_sand.png";
 var wall = document.createElement("img");
 wall.src = "images/tile_wall.png";
-
+var grass = document.createElement("img");
+grass.src = "images/tile_grass.png";
+var dirt = document.createElement("img");
+dirt.src = "images/tile_dirt.png";
 
 tiles = [];
 
@@ -21,6 +24,8 @@ var cols = 20;
 
 const TILE_GROUND = 0;
 const TILE_SAND = 1;
+const TILE_GRASS = 2;
+const TILE_DIRT = 3;
 const TILE_WALL = 10;
 
 var tileGrid = [];
@@ -32,6 +37,8 @@ var tileMap = new Map();
 tileMap.set(TILE_GROUND, ground);
 tileMap.set(TILE_SAND, sand);
 tileMap.set(TILE_WALL, wall);
+tileMap.set(TILE_GRASS, grass);
+tileMap.set(TILE_DIRT, dirt);
 
 var mouseDown = false;
 var brush = -1;
@@ -57,11 +64,19 @@ function createTileBlueprints()
   tiles.push(groundTile);
 
   var sandTile = new Tile();
-  sandTile.init(10, 110, sand, TILE_SAND);
+  sandTile.init(10, 60, sand, TILE_SAND);
   tiles.push(sandTile);
 
+  var grassTile = new Tile();
+  grassTile.init(10, 110, grass, TILE_GRASS);
+  tiles.push(grassTile);
+
+  var dirtTile = new Tile();
+  dirtTile.init(10, 160, dirt, TILE_DIRT);
+  tiles.push(dirtTile);
+
   var wallTile = new Tile();
-  wallTile.init(10, 60, wall, TILE_WALL);
+  wallTile.init(10, 210, wall, TILE_WALL);
   tiles.push(wallTile);
 }
 
@@ -208,10 +223,14 @@ function buttonPressed()
   var doorNames = document.getElementById("doorNames").value;
   var doorXFlags = document.getElementById("doorXFlags").value;
   var doorYFlags = document.getElementById("doorYFlags").value;
+  var doorXWarps = document.getElementById("doorXWarp").value;
+  var doorYWarps = document.getElementById("doorYWarp").value;
 
   var doorNamesArray = doorNames.split(",");
   var doorXFlagsArray = doorXFlags.split("|");
   var doorYFlagsArray = doorYFlags.split("|");
+  var doorXWarpsArray = doorXWarps.split(",");
+  var doorYWarpsArray = doorYWarps.split(",");
 
   textArea.value = "new Room(\n\t";
   textArea.value += "\"" + roomName + "\", "+cols+", "+rows+",\n\t";
@@ -238,10 +257,12 @@ function buttonPressed()
     textArea.value += "new Door(";
     textArea.value += "\""+doorNamesArray[i]+"\", ";
     textArea.value += doorXFlagsArray[i]+", ";
+    textArea.value += doorYFlagsArray[i]+", ";
+    textArea.value += doorXWarpsArray[i]+", ";
     if (i < doorNamesArray.length-1)
-      textArea.value += doorYFlagsArray[i]+"),\n\t\t";
+      textArea.value += doorYWarpsArray[i]+"),\n\t\t";
     else
-      textArea.value += doorYFlagsArray[i]+")\n\t";
+      textArea.value += doorYWarpsArray[i]+")\n\t";
   }
   textArea.value += "]\n";
   textArea.value += ");";

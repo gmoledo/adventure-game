@@ -1,6 +1,6 @@
 var player = new Player();
 
-const WALK_TIME_MULTIPLIER = 1/3;
+const WALK_TIME_MULTIPLIER = 1/5;
 
 function Player()
 {
@@ -130,6 +130,7 @@ function Player()
     this.x += dx;
     this.y += dy;
 
+    console.log(camera.translation.y);
     camera.translateCanvas(dx, dy);
     
     this.walkFrame++;
@@ -142,21 +143,27 @@ function Player()
       this.x = this.tileX * TILE_SIZE;
       this.y = this.tileY * TILE_SIZE;
 
+      camera.translation.x = Math.round(camera.translation.x);
+      camera.translation.y = Math.round(camera.translation.y);
       this.walkFrame = 0;
 
 
       if (this.tileX < 0 || this.tileX >= currentRoom.cols)
       {
-        changeRoom(this.tileX, this.tileY);
+        var warpPos = changeRoom(this.tileX, this.tileY);
         this.tileX = (this.tileX <= 0) ? currentRoom.cols : -1;
         this.x = this.tileX * TILE_SIZE;
+        this.tileY += warpPos.yWarp;
+        this.y = this.tileY * TILE_SIZE;
         camera.setCanvasPosition();
       }
       else if (this.tileY < 0 || this.tileY >= currentRoom.rows)
       {
-        changeRoom(this.tileX, this.tileY);
+        var warpPos = changeRoom(this.tileX, this.tileY);
         this.tileY = (this.tileY <= 0) ? currentRoom.rows : -1;
         this.y = this.tileY * TILE_SIZE;
+        this.tileX += warpPos.xWarp;
+        this.x = this.tileX * TILE_SIZE;
         camera.setCanvasPosition();
       }
       else
