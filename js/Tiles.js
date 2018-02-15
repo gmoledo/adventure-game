@@ -5,6 +5,7 @@ const TILE_GROUND = 0;
 const TILE_SAND   = 1;
 const TILE_GRASS = 2;
 const TILE_DIRT = 3;
+const TILE_CAVE_GROUND = 4;
 const GROUND_CAP = 9;
 
 const TILE_WALL   = 10;
@@ -15,6 +16,9 @@ tileToImageIdMap.set(TILE_WALL,    images.wall);
 tileToImageIdMap.set(TILE_SAND,    images.sand);
 tileToImageIdMap.set(TILE_GRASS,   images.grass);
 tileToImageIdMap.set(TILE_DIRT,    images.dirt);
+tileToImageIdMap.set(TILE_CAVE_GROUND, images.caveGround);
+
+const COL_EXISTS = 1;
 
 function tileXYToTileGrid(room, tileX,  tileY)
 {
@@ -41,7 +45,7 @@ function drawTiles()
     for (var col=0; col<currentRoom.cols; col++)
     {
 
-      var tileType = currentRoom.grid[tileIndex];
+      var tileType = currentRoom.artGrid[tileIndex];
       var tileImageId = tileToImageIdMap.get(tileType);
       var tileImage = imageMap.get(tileImageId);
 

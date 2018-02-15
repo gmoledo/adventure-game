@@ -1,44 +1,71 @@
 c = document.getElementById("editCanvas");
 cc = c.getContext("2d");
 
-var levelEditorBg = document.createElement("img");
-levelEditorBg.src = "images/background_level_editor.png";
-var player = document.createElement("img");
-player.src =  "images/character_player.png";
-var ground = document.createElement("img");
-ground.src = "images/tile_ground.png";
-var sand = document.createElement("img");
-sand.src = "images/tile_sand.png";
-var wall = document.createElement("img");
-wall.src = "images/tile_wall.png";
-var grass = document.createElement("img");
-grass.src = "images/tile_grass.png";
-var dirt = document.createElement("img");
-dirt.src = "images/tile_dirt.png";
+images = 
+{
+  ground: "images/tile_ground.png",
+  sand: "images/tile_sand.png",
+  grass: "images/tile_grass.png",
+  dirt: "images/tile_dirt.png",
+  caveGround: "images/tile_cave_ground.png",
+  wall: "images/tile_wall.png",
+  collision: "images/tile_collision.png",
+  noCollision: "images/tile_no_collision.png"
+}
+imageMap = new Map();
+// var levelEditorBg = document.createElement("img");
+// levelEditorBg.src = "images/background_level_editor.png";
+// var player = document.createElement("img");
+// player.src =  "images/character_player.png";
+// var ground = document.createElement("img");
+// ground.src = "images/tile_ground.png";
+// var sand = document.createElement("img");
+// sand.src = "images/tile_sand.png";
+// var wall = document.createElement("img");
+// wall.src = "images/tile_wall.png";
+// var grass = document.createElement("img");
+// grass.src = "images/tile_grass.png";
+// var dirt = document.createElement("img");
+// dirt.src = "images/tile_dirt.png";
 
 tiles = [];
 
 const TILE_SIZE = 32;
 var rows = 15;
-var cols = 20;
+var cols = 19;
 
 const TILE_GROUND = 0;
 const TILE_SAND = 1;
 const TILE_GRASS = 2;
 const TILE_DIRT = 3;
+const TILE_CAVE_GROUND = 4;
 const TILE_WALL = 10;
 
-var tileGrid = [];
+const COL_NONE = 0;
+const COL_EXISTS = 1;
+
+const ART = "Art";
+const COLLISION = "Collision";
+
+var tileMap = new Map();
+tileMap.set(TILE_GROUND, images.ground);
+tileMap.set(TILE_SAND, images.sand);
+tileMap.set(TILE_GRASS, images.grass);
+tileMap.set(TILE_DIRT, images.dirt);
+tileMap.set(TILE_CAVE_GROUND, images.caveGround);
+tileMap.set(TILE_WALL, images.wall);
+
+var artTileGrid = [];
 for (var i=0; i<rows*cols; i++)
 {
-  tileGrid[i] = TILE_GROUND;
+  artTileGrid[i] = TILE_GROUND;
 }
-var tileMap = new Map();
-tileMap.set(TILE_GROUND, ground);
-tileMap.set(TILE_SAND, sand);
-tileMap.set(TILE_WALL, wall);
-tileMap.set(TILE_GRASS, grass);
-tileMap.set(TILE_DIRT, dirt);
+
+var colTileGrid = [];
+for (var i=0; i<rows*cols; i++)
+{
+  colTileGrid[i] = COL_NONE;
+}
 
 var mouseDown = false;
 var brush = -1;
@@ -46,44 +73,83 @@ var border = {draw:false, x:0, y:0};
 
 window.onload = function()
 {
-
+  loadImages();
 
   c.addEventListener("mousedown", onMouseDown);
   c.addEventListener("mousemove", onMouseMove);
-  c.addEventListener("mouseup", onMouseUp);
+  document.addEventListener("mouseup", onMouseUp);
 
   createTileBlueprints();
 
-  setInterval(update, 1000/144)
+  setInterval(update, 1000/30)
+}
+
+function loadImages()
+{
+  for (var image in images)
+  {
+    if (Array.isArray(images[image]))
+    {
+      var animation = images[image];
+      animation.forEach(function(frame){
+        beginLoadingImage(frame);
+      });
+    }
+    else
+    {
+      beginLoadingImage(images[image]);
+    }
+  }
+}
+
+function beginLoadingImage(imageFile)
+{  
+  var docImage = document.createElement("img");
+  imageMap.set(imageFile, docImage);
+
+  docImage.src = imageFile;
 }
 
 function createTileBlueprints()
 {
   var groundTile = new Tile();
-  groundTile.init(10, 10, ground, TILE_GROUND);
+  groundTile.init(10, 10, imageMap.get(images.ground), TILE_GROUND, ART);
   tiles.push(groundTile);
 
   var sandTile = new Tile();
-  sandTile.init(10, 60, sand, TILE_SAND);
+  sandTile.init(10, 60, imageMap.get(images.sand), TILE_SAND, ART);
   tiles.push(sandTile);
 
   var grassTile = new Tile();
-  grassTile.init(10, 110, grass, TILE_GRASS);
+  grassTile.init(10, 110, imageMap.get(images.grass), TILE_GRASS, ART);
   tiles.push(grassTile);
 
   var dirtTile = new Tile();
-  dirtTile.init(10, 160, dirt, TILE_DIRT);
+  dirtTile.init(10, 160, imageMap.get(images.dirt), TILE_DIRT, ART);
   tiles.push(dirtTile);
 
+  var caveGroundTile = new Tile();
+  caveGroundTile.init(10, 210, imageMap.get(images.caveGround), TILE_CAVE_GROUND, ART);
+  tiles.push(caveGroundTile);
+
   var wallTile = new Tile();
-  wallTile.init(10, 210, wall, TILE_WALL);
+  wallTile.init(10, 260, imageMap.get(images.wall), TILE_WALL, ART);
   tiles.push(wallTile);
+
+  var noColTile = new Tile();
+  noColTile.init(10, 310, imageMap.get(images.noCollision), COL_NONE, COLLISION);
+  tiles.push(noColTile);
+
+  var colTile = new Tile();
+  colTile.init(10, 360, imageMap.get(images.collision), COL_EXISTS, COLLISION);
+  tiles.push(colTile);
 }
 
 function update()
 {
   draw();
-  drawTileGrid();
+  drawArtTileGrid();
+  drawColTileGrid();
   //console.log(tiles);
   tiles.forEach(function(tile){
     tile.draw();
@@ -96,17 +162,30 @@ function draw()
   cc.fillRect(0, 0, 200, c.height);
 
   cc.fillStyle = "teal";
-  cc.drawImage(levelEditorBg, 200, 0);
+  cc.fillRect(200, 0, 800, 640);
 
   if (border.draw)
     drawBorder(border.x, border.y);
 }
 
-function drawTileGrid()
+function drawArtTileGrid()
 {
-  for (var i=0; i<tileGrid.length; i++)
+  for (var i=0; i<artTileGrid.length; i++)
   {
-    cc.drawImage(tileMap.get(tileGrid[i]), 200+i%cols*TILE_SIZE, Math.floor(i/cols)*TILE_SIZE);
+    var tileType = artTileGrid[i];
+    var tileImageId = tileMap.get(tileType);
+    cc.drawImage(imageMap.get(tileImageId), 200+i%cols*TILE_SIZE, Math.floor(i/cols)*TILE_SIZE);
+  }
+}
+
+function drawColTileGrid()
+{
+  for (var i=0; i<colTileGrid.length; i++)
+  {
+    if (colTileGrid[i] == COL_EXISTS)
+    {
+      cc.drawImage(imageMap.get(images.collision), 200+i%cols*TILE_SIZE, Math.floor(i/cols)*TILE_SIZE);
+    }
   }
 }
 
@@ -125,12 +204,13 @@ function Tile()
   this.y;
   this.sprite;
 
-  this.init = function(x, y, image, type)
+  this.init = function(x, y, image, type, layer)
   {
     this.x = x;
     this.y = y;
     this.sprite = image;
     this.type = type;
+    this.layer = layer;
   }
 
   this.draw = function()
@@ -152,6 +232,8 @@ function onMouseDown(e)
           mousePos.y >= tile.y && mousePos.y < tile.y+tile.sprite.height)
       {
         brush = tile.type;
+        brushLayer = tile.layer;
+        console.log(brush);
         border = {draw:true, x:tile.x, y:tile.y};
         found = true;
       }
@@ -165,10 +247,19 @@ function onMouseDown(e)
   else
   {
     var tile = mousePosToTileGrid(mousePos);
-    //console.log(tile);
+    console.log(brush);
     if (brush != -1 && tile != undefined)
     {
-      tileGrid[tile] = brush;
+        console.log(brushLayer);
+      if (brushLayer == ART)
+      {
+        artTileGrid[tile] = brush;
+      }
+      else
+      {
+        colTileGrid[tile] = brush;
+        console.log(brush);
+      }
     }
   }
 }
@@ -188,9 +279,16 @@ function onMouseMove(e)
   if (mouseDown && mousePos.x >= 200)
   {
     var tile = mousePosToTileGrid(mousePos);
-    if (brush != -1)
-    {
-      tileGrid[tile] = brush;
+    if (brush != -1 && tile != undefined)
+    {      
+      if (brushLayer == ART)
+      {
+        artTileGrid[tile] = brush;
+      }
+      else
+      {
+        colTileGrid[tile] = brush;
+      }
     }
   }
 
@@ -239,7 +337,7 @@ function buttonPressed()
   {
     for (var j=0; j<cols; j++)
     {
-      tgElement = tileGrid[i*cols + j].toString();
+      tgElement = artTileGrid[i*cols + j].toString();
       elementLength = tgElement.length;
       for (var k=0; k<4-elementLength; k++)
       {
@@ -251,6 +349,28 @@ function buttonPressed()
   }
   textArea.value = textArea.value.substr(0, textArea.value.length-3)+"\n\t";
   textArea.value += "],\n\t";
+
+  tgElement = 0;
+  elementLength = 0;
+
+  textArea.value += "[\n\t";
+  for (var i=0; i<rows; i++)
+  {
+    for (var j=0; j<cols; j++)
+    {
+      tgElement = colTileGrid[i*cols + j].toString();
+      elementLength = tgElement.length;
+      for (var k=0; k<4-elementLength; k++)
+      {
+        textArea.value += " ";
+      }
+      textArea.value += tgElement+",";
+    }
+    textArea.value += "\n\t";
+  }
+  textArea.value = textArea.value.substr(0, textArea.value.length-3)+"\n\t";
+  textArea.value += "],\n\t";
+
   textArea.value += "[\n\t\t";
   for (var i=0; i<doorNamesArray.length; i++)
   {
@@ -280,8 +400,11 @@ function getRowsAndCols()
 {
   rows = document.getElementById("rows").value;
   cols = document.getElementById("cols").value;
+
+  var newTileGrid = [];
   for (var i=0; i<rows*cols; i++)
   {
-    tileGrid[i] = TILE_GROUND;
+    newTileGrid[i] = TILE_GROUND;
   }
+  artTileGrid = newTileGrid;
 }

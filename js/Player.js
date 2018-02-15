@@ -52,7 +52,7 @@ function Player()
   this.init = function(name)
   {
     this.name = name; 
-    this.tileX = 6;
+    this.tileX = 9;
     this.tileY = 7;
     this.x = this.tileX * TILE_SIZE;   // TILE_SIZE -> Tiles.js
     this.y = this.tileY * TILE_SIZE;
@@ -187,7 +187,7 @@ function Player()
     {
       return false;
     }
-    return currentRoom.grid[nextTileInGrid] > GROUND_CAP // currentRoom, TILE_GROUND -> tiles.js
+    return currentRoom.colGrid[nextTileInGrid] == COL_EXISTS // currentRoom, TILE_GROUND -> tiles.js
 
   }
 

@@ -15,11 +15,12 @@ images =
   playerWalkWest:  ["character_player_walk_west_0.png",
                     "character_player_walk_west_1.png",
                     "character_player_walk_west_2.png"],
-  ground: "tile_ground.png",
-  sand:   "tile_sand.png",
-  wall:   "tile_wall.png",
-  grass:  "tile_grass.png",
-  dirt:   "tile_dirt.png"
+  ground:     "tile_ground.png",
+  sand:       "tile_sand.png",
+  wall:       "tile_wall.png",
+  grass:      "tile_grass.png",
+  dirt:       "tile_dirt.png",
+  caveGround: "tile_cave_ground.png"
 };
 
 // Reference image elements through imageMap
@@ -33,7 +34,6 @@ function loadImages()
 {
   for (var image in images)
   {
-    console.log(image);
     if (Array.isArray(images[image]))
     {
       var animation = images[image];
@@ -45,7 +45,6 @@ function loadImages()
     {
       beginLoadingImage(images[image]);
     }
-
   }
 }
 
