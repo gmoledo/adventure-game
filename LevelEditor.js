@@ -1,60 +1,49 @@
 c = document.getElementById("editCanvas");
 cc = c.getContext("2d");
 
+const ART = "Art";
+const COLLISION = "Collision";
+
 images = 
 {
-  ground: "images/tile_ground.png",
-  sand: "images/tile_sand.png",
-  grass: "images/tile_grass.png",
-  dirt: "images/tile_dirt.png",
-  caveGround: "images/tile_cave_ground.png",
+  ground:       {file: "images/tile_ground.png",        tile: 0,  type: ART},
+  sand:         {file: "images/tile_sand.png",          tile: 1,  type: ART},
+  grass:        {file: "images/tile_grass.png",         tile: 2,  type: ART},
+  dirt:         {file: "images/tile_dirt.png",          tile: 3,  type: ART},
+  caveGround:   {file: "images/tile_cave_ground.png",   tile: 4,  type: ART},
+  wall:         {file: "images/tile_wall.png",          tile: 10, type: ART},
 
-  wall: "images/tile_wall.png",
-
-  collision: "images/tile_collision.png",
-  noCollision: "images/tile_no_collision.png"
+  noCollision:  {file: "images/tile_no_collision.png",  tile: 0,  type: COLLISION},
+  collision:    {file: "images/tile_collision.png",     tile: 1,  type: COLLISION}
 }
 imageMap = new Map();
 
 tiles = [];
 
+var tileMap = new Map();
+tileMap.set(images.ground.tile,     images.ground.file);
+tileMap.set(images.sand.tile,       images.sand.file);
+tileMap.set(images.grass.tile,      images.grass.file);
+tileMap.set(images.dirt.tile,       images.dirt.file);
+tileMap.set(images.caveGround.tile, images.caveGround.file);
+tileMap.set(images.wall.tile,       images.wall.file);
+
+
+
 const TILE_SIZE = 32;
 var rows = 15;
 var cols = 19;
 
-const TILE_GROUND = 0;
-const TILE_SAND = 1;
-const TILE_GRASS = 2;
-const TILE_DIRT = 3;
-const TILE_CAVE_GROUND = 4;
-const TILE_WALL = 10;
-
-var tileMap = new Map();
-tileMap.set(TILE_GROUND, images.ground);
-tileMap.set(TILE_SAND, images.sand);
-tileMap.set(TILE_GRASS, images.grass);
-tileMap.set(TILE_DIRT, images.dirt);
-tileMap.set(TILE_CAVE_GROUND, images.caveGround);
-tileMap.set(TILE_WALL, images.wall);
-
-
-const COL_NONE = 0;
-const COL_EXISTS = 1;
-const ART = "Art";
-const COLLISION = "Collision";
-
-
-
 var artTileGrid = [];
 for (var i=0; i<rows*cols; i++)
 {
-  artTileGrid[i] = TILE_GROUND;
+  artTileGrid[i] = images.ground.tile;
 }
 
 var colTileGrid = [];
 for (var i=0; i<rows*cols; i++)
 {
-  colTileGrid[i] = COL_NONE;
+  colTileGrid[i] = images.noCollision.tile;
 }
 
 
@@ -87,7 +76,7 @@ function loadImages()
 {
   for (var image in images)
   {
-    beginLoadingImage(images[image]);
+    beginLoadingImage(images[image].file);
   }
 }
 
@@ -101,37 +90,17 @@ function beginLoadingImage(imageFile)
 
 function createTileBlueprints()
 {
-  var groundTile = new Tile();
-  groundTile.init(10, 10, imageMap.get(images.ground), TILE_GROUND, ART);
-  tiles.push(groundTile);
-
-  var sandTile = new Tile();
-  sandTile.init(10, 60, imageMap.get(images.sand), TILE_SAND, ART);
-  tiles.push(sandTile);
-
-  var grassTile = new Tile();
-  grassTile.init(10, 110, imageMap.get(images.grass), TILE_GRASS, ART);
-  tiles.push(grassTile);
-
-  var dirtTile = new Tile();
-  dirtTile.init(10, 160, imageMap.get(images.dirt), TILE_DIRT, ART);
-  tiles.push(dirtTile);
-
-  var caveGroundTile = new Tile();
-  caveGroundTile.init(10, 210, imageMap.get(images.caveGround), TILE_CAVE_GROUND, ART);
-  tiles.push(caveGroundTile);
-
-  var wallTile = new Tile();
-  wallTile.init(10, 260, imageMap.get(images.wall), TILE_WALL, ART);
-  tiles.push(wallTile);
-
-  var noColTile = new Tile();
-  noColTile.init(10, 310, imageMap.get(images.noCollision), COL_NONE, COLLISION);
-  tiles.push(noColTile);
-
-  var colTile = new Tile();
-  colTile.init(10, 360, imageMap.get(images.collision), COL_EXISTS, COLLISION);
-  tiles.push(colTile);
+  var newTile;
+  var i = 0;
+  for (var imageIndex in images)
+  {
+    var image = images[imageIndex];
+    newTile = new Tile();
+    newTile.init(10+50*(i%3), 10+50*Math.floor(i/3),
+                  imageMap.get(image.file), image.tile, image.type);
+    tiles.push(newTile);
+    i++;
+  }
 }
 
 function update()
@@ -174,9 +143,9 @@ function drawColTileGrid()
 {
   for (var i=0; i<colTileGrid.length; i++)
   {
-    if (colTileGrid[i] == COL_EXISTS)
+    if (colTileGrid[i] == 1)
     {
-      cc.drawImage(imageMap.get(images.collision), 200+i%cols*TILE_SIZE+gridScroll.x, Math.floor(i/cols)*TILE_SIZE+gridScroll.y);
+      cc.drawImage(imageMap.get(images.collision.file), 200+i%cols*TILE_SIZE+gridScroll.x, Math.floor(i/cols)*TILE_SIZE+gridScroll.y);
     }
   }
 }
