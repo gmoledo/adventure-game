@@ -29,12 +29,6 @@ const TILE_DIRT = 3;
 const TILE_CAVE_GROUND = 4;
 const TILE_WALL = 10;
 
-const COL_NONE = 0;
-const COL_EXISTS = 1;
-
-const ART = "Art";
-const COLLISION = "Collision";
-
 var tileMap = new Map();
 tileMap.set(TILE_GROUND, images.ground);
 tileMap.set(TILE_SAND, images.sand);
@@ -42,6 +36,14 @@ tileMap.set(TILE_GRASS, images.grass);
 tileMap.set(TILE_DIRT, images.dirt);
 tileMap.set(TILE_CAVE_GROUND, images.caveGround);
 tileMap.set(TILE_WALL, images.wall);
+
+
+const COL_NONE = 0;
+const COL_EXISTS = 1;
+const ART = "Art";
+const COLLISION = "Collision";
+
+
 
 var artTileGrid = [];
 for (var i=0; i<rows*cols; i++)
@@ -85,17 +87,7 @@ function loadImages()
 {
   for (var image in images)
   {
-    if (Array.isArray(images[image]))
-    {
-      var animation = images[image];
-      animation.forEach(function(frame){
-        beginLoadingImage(frame);
-      });
-    }
-    else
-    {
-      beginLoadingImage(images[image]);
-    }
+    beginLoadingImage(images[image]);
   }
 }
 
