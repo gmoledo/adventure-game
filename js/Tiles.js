@@ -6,7 +6,6 @@ const TILE_SAND   = 1;
 const TILE_GRASS = 2;
 const TILE_DIRT = 3;
 const TILE_CAVE_GROUND = 4;
-const GROUND_CAP = 9;
 
 const TILE_WALL   = 10;
 
