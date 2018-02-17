@@ -413,8 +413,8 @@ function getRowsAndCols()
   var newColTileGrid = [];
   for (var i=0; i<rows*cols; i++)
   {
-    newArtTileGrid[i] = TILE_GROUND;
-    newColTileGrid[i] = COL_NONE;
+    newArtTileGrid[i] = 0;
+    newColTileGrid[i] = 0;
   }
   artTileGrid = newArtTileGrid;
   colTileGrid = newColTileGrid;
