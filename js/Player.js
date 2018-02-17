@@ -49,11 +49,11 @@ function Player()
   this.walkCycleFramePattern = [1, 0, 2];
 
 
-  this.init = function(name)
+  this.init = function(name, tileX, tileY)
   {
     this.name = name; 
-    this.tileX = 9;
-    this.tileY = 7;
+    this.tileX = tileX;
+    this.tileY = tileY;
     this.x = this.tileX * TILE_SIZE;   // TILE_SIZE -> Tiles.js
     this.y = this.tileY * TILE_SIZE;
     this.walkTime = fps * WALK_TIME_MULTIPLIER;  // fps -> Main.js

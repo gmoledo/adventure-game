@@ -3,6 +3,7 @@ cc = c.getContext("2d");
 
 const ART = "Art";
 const COLLISION = "Collision";
+const OBJECT = "Object";
 
 images = 
 {
@@ -14,7 +15,10 @@ images =
   wall:         {file: "images/tile_wall.png",          tile: 10, type: ART},
 
   noCollision:  {file: "images/tile_no_collision.png",  tile: 0,  type: COLLISION},
-  collision:    {file: "images/tile_collision.png",     tile: 1,  type: COLLISION}
+  collision:    {file: "images/tile_collision.png",     tile: 1,  type: COLLISION},
+
+  noObject:     {file: "images/tile_no_object.png",     tile: 0,  type: OBJECT},
+  player:       {file: "images/character_player.png",   tile: 1,  type: OBJECT}
 }
 imageMap = new Map();
 
@@ -28,6 +32,8 @@ tileMap.set(images.dirt.tile,       images.dirt.file);
 tileMap.set(images.caveGround.tile, images.caveGround.file);
 tileMap.set(images.wall.tile,       images.wall.file);
 
+var objectMap = new Map();
+objectMap.set(images.player.tile,   images.player.file);
 
 
 const TILE_SIZE = 32;
@@ -46,6 +52,11 @@ for (var i=0; i<rows*cols; i++)
   colTileGrid[i] = images.noCollision.tile;
 }
 
+var objTileGrid = [];
+for (var i=0; i<rows*cols; i++)
+{
+  objTileGrid[i] = images.noObject.tile;
+}
 
 var mouseDown = false;
 var mouseLastPos = {x: 0, y: 0};
@@ -107,6 +118,7 @@ function update()
 {
   drawRight();
   drawArtTileGrid();
+  drawObjTileGrid();
   drawColTileGrid();
   drawLeft();
 
@@ -119,8 +131,6 @@ function drawLeft()
 {
   cc.fillStyle = "grey";
   cc.fillRect(0, 0, 200, c.height);
-
-
 }
 
 function drawRight()
@@ -146,6 +156,19 @@ function drawColTileGrid()
     if (colTileGrid[i] == 1)
     {
       cc.drawImage(imageMap.get(images.collision.file), 200+i%cols*TILE_SIZE+gridScroll.x, Math.floor(i/cols)*TILE_SIZE+gridScroll.y);
+    }
+  }
+}
+
+function drawObjTileGrid()
+{
+  for (var i=0; i<objTileGrid.length; i++)
+  {
+    if (objTileGrid[i] == 1)
+    {
+      var tileType = objTileGrid[i];
+      var tileImageId = objectMap.get(tileType);
+      cc.drawImage(imageMap.get(tileImageId), 200+i%cols*TILE_SIZE+gridScroll.x, Math.floor(i/cols)*TILE_SIZE+gridScroll.y);
     }
   }
 }
@@ -220,9 +243,13 @@ function onMouseDown(e)
       {
         artTileGrid[tile] = brush;
       }
-      else
+      else if (brushLayer == COLLISION)
       {
         colTileGrid[tile] = brush;
+      }
+      else
+      {
+        objTileGrid[tile] = brush;
       }
     }
   }
@@ -262,9 +289,13 @@ function onMouseMove(e)
         {
           artTileGrid[tile] = brush;
         }
-        else
+        else if (brushLayer == COLLISION)
         {
           colTileGrid[tile] = brush;
+        }
+        else
+        {
+          objTileGrid[tile] = brush;
         }
       } 
     }
@@ -358,6 +389,7 @@ function buttonPressed()
   textArea.value = textArea.value.substr(0, textArea.value.length-3)+"\n\t";
   textArea.value += "],\n\t";
 
+
   tgElement = 0;
   elementLength = 0;
 
@@ -378,6 +410,29 @@ function buttonPressed()
   }
   textArea.value = textArea.value.substr(0, textArea.value.length-3)+"\n\t";
   textArea.value += "],\n\t";
+
+  tgElement = 0;
+  elementLength = 0;
+
+      console.log(objTileGrid);
+  textArea.value += "[\n\t";
+  for (var i=0; i<rows; i++)
+  {
+    for (var j=0; j<cols; j++)
+    {
+      tgElement = objTileGrid[i*cols + j].toString();
+      elementLength = tgElement.length;
+      for (var k=0; k<4-elementLength; k++)
+      {
+        textArea.value += " ";
+      }
+      textArea.value += tgElement+",";
+    }
+    textArea.value += "\n\t";
+  }
+  textArea.value = textArea.value.substr(0, textArea.value.length-3)+"\n\t";
+  textArea.value += "],\n\t";
+
 
   textArea.value += "[\n\t\t";
   for (var i=0; i<doorNamesArray.length; i++)

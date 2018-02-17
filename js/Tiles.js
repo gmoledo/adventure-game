@@ -26,11 +26,6 @@ function tileXYToTileGrid(room, tileX,  tileY)
   return tileY*room.cols + tileX;
 }
 
-function updateTiles()
-{
-  // currentRoom = rooms[tileXYToTileGrid(roomX, roomY)];
-}
-
 function drawTiles()
 {
   var tileIndex = 0;
@@ -55,5 +50,14 @@ function drawTiles()
     }
 
     tileTopEdgeY += TILE_SIZE;
+  }
+}
+
+function createObjectFromTile(tile)
+{
+  switch (tile)
+  {
+    case 1:   return new Player();
+    default:  console.log("No object for this tile");
   }
 }

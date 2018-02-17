@@ -25,6 +25,7 @@ function startGame()
   menu.init();
   camera.init();
   currentRoom = rooms[0];
+  initializeObjectsInRoom(); // Rooms.js 
 
   setInterval(mainLoop, 1000/fps);
 
