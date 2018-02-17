@@ -243,7 +243,7 @@ function mousePosToTileGrid(mousePos)
 {
   var tileX = Math.floor((mousePos.x - gridScroll.x - 200) / TILE_SIZE);
   var tileY = Math.floor((mousePos.y - gridScroll.y) / TILE_SIZE);
-  if (tileX >= cols || tileY >= rows)
+  if (tileX >= cols || tileY >= rows || tileX < 0 || tileY < 0)
     return undefined;
   return tileY * cols + tileX;
 }
