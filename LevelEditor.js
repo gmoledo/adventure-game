@@ -10,7 +10,12 @@ images =
   ground:       {file: "images/tile_ground.png",        tile: 0,  type: ART},
   sand:         {file: "images/tile_sand.png",          tile: 1,  type: ART},
   grass:        {file: "images/tile_grass.png",         tile: 2,  type: ART},
+  grass1:       {file: "images/tile_grass_1.png",       tile: 21, type: ART},
+  grass2:       {file: "images/tile_grass_2.png",       tile: 22, type: ART},
+  grass3:       {file: "images/tile_grass_3.png",       tile: 23, type: ART},
   dirt:         {file: "images/tile_dirt.png",          tile: 3,  type: ART},
+  dirt1:        {file: "images/tile_dirt_1.png",        tile: 31, type: ART},
+  dirt2:        {file: "images/tile_dirt_2.png",        tile: 32, type: ART},
   caveGround:   {file: "images/tile_cave_ground.png",   tile: 4,  type: ART},
   wall:         {file: "images/tile_wall.png",          tile: 10, type: ART},
 
@@ -25,12 +30,12 @@ imageMap = new Map();
 tiles = [];
 
 var tileMap = new Map();
-tileMap.set(images.ground.tile,     images.ground.file);
-tileMap.set(images.sand.tile,       images.sand.file);
-tileMap.set(images.grass.tile,      images.grass.file);
-tileMap.set(images.dirt.tile,       images.dirt.file);
-tileMap.set(images.caveGround.tile, images.caveGround.file);
-tileMap.set(images.wall.tile,       images.wall.file);
+for (var imageIndex in images)
+{
+  var image = images[imageIndex];
+  if (image.type == ART)
+    tileMap.set(image.tile, image.file);
+}
 
 var objectMap = new Map();
 objectMap.set(images.player.tile,   images.player.file);
@@ -40,22 +45,44 @@ const TILE_SIZE = 32;
 var rows = 15;
 var cols = 19;
 
-var artTileGrid = [];
-for (var i=0; i<rows*cols; i++)
-{
-  artTileGrid[i] = images.ground.tile;
+function create2DArray(rows) {
+  var arr = [];
+
+  for (var i=0;i<rows;i++) {
+     arr[i] = [];
+  }
+
+  return arr;
 }
 
-var colTileGrid = [];
-for (var i=0; i<rows*cols; i++)
+var artTileGrid = create2DArray(rows);
+for (var i=0; i<rows; i++)
 {
-  colTileGrid[i] = images.noCollision.tile;
+  console.log(artTileGrid[i][0]);
+  for (var j=0; j<cols; j++)
+  {
+    artTileGrid[i][j] = images.ground.tile;
+  }
+
 }
 
-var objTileGrid = [];
-for (var i=0; i<rows*cols; i++)
+var colTileGrid = create2DArray(rows);
+for (var i=0; i<rows; i++)
 {
-  objTileGrid[i] = images.noObject.tile;
+  for (var j=0; j<cols; j++)
+  {
+    colTileGrid[i][j] = images.noCollision.tile;
+  }
+}
+
+var objTileGrid = create2DArray(rows);
+for (var i=0; i<rows; i++)
+{
+  for (var j=0; j<cols; j++)
+  {
+    objTileGrid[i][j] = images.noObject.tile;
+  }
+
 }
 
 var mouseDown = false;
@@ -143,9 +170,12 @@ function drawArtTileGrid()
 {
   for (var i=0; i<artTileGrid.length; i++)
   {
-    var tileType = artTileGrid[i];
-    var tileImageId = tileMap.get(tileType);
-    cc.drawImage(imageMap.get(tileImageId), 200+i%cols*TILE_SIZE+gridScroll.x, Math.floor(i/cols)*TILE_SIZE+gridScroll.y);
+    for (var j=0; j<artTileGrid[i].length; j++)
+    {
+      var tileType = artTileGrid[i][j];
+      var tileImageId = tileMap.get(tileType);
+      cc.drawImage(imageMap.get(tileImageId), 200+j*TILE_SIZE+gridScroll.x, i*TILE_SIZE+gridScroll.y);
+    }
   }
 }
 
@@ -153,9 +183,12 @@ function drawColTileGrid()
 {
   for (var i=0; i<colTileGrid.length; i++)
   {
-    if (colTileGrid[i] == 1)
+    for (var j=0; j<colTileGrid[i].length; j++)
     {
-      cc.drawImage(imageMap.get(images.collision.file), 200+i%cols*TILE_SIZE+gridScroll.x, Math.floor(i/cols)*TILE_SIZE+gridScroll.y);
+      if (colTileGrid[i][j] == 1)
+      {
+        cc.drawImage(imageMap.get(images.collision.file), 200+j*TILE_SIZE+gridScroll.x, i*TILE_SIZE+gridScroll.y);
+      }     
     }
   }
 }
@@ -164,11 +197,15 @@ function drawObjTileGrid()
 {
   for (var i=0; i<objTileGrid.length; i++)
   {
-    if (objTileGrid[i] == 1)
+    for (var j=0; j<objTileGrid[i].length; j++)
     {
-      var tileType = objTileGrid[i];
-      var tileImageId = objectMap.get(tileType);
-      cc.drawImage(imageMap.get(tileImageId), 200+i%cols*TILE_SIZE+gridScroll.x, Math.floor(i/cols)*TILE_SIZE+gridScroll.y);
+      if (objTileGrid[i][j] == 1)
+      {
+        console.log("D");
+        var tileType = objTileGrid[i][j];
+        var tileImageId = objectMap.get(tileType);
+        cc.drawImage(imageMap.get(tileImageId), 200+j*TILE_SIZE+gridScroll.x, i*TILE_SIZE+gridScroll.y);
+      }      
     }
   }
 }
@@ -222,6 +259,11 @@ function onMouseDown(e)
         brushLayer = tile.layer;
         tile.border = true;
         found = true;
+        if (brush == images.player.tile)
+        {
+          alert("Player should only be placed once");
+          mouseDown = false;
+        }
       }
       else if (!found)
       {
@@ -236,43 +278,8 @@ function onMouseDown(e)
   }
   else if (mousePos.x >= 200 && !shiftKeyDown)
   {
-    var tile = mousePosToTileGrid(mousePos);
-    if (brush != -1 && tile != undefined)
-    {
-      if (brushLayer == ART)
-      {
-        artTileGrid[tile] = brush;
-      }
-      else if (brushLayer == COLLISION)
-      {
-        colTileGrid[tile] = brush;
-      }
-      else
-      {
-        objTileGrid[tile] = brush;
-      }
-    }
+    paintTile(mousePos);
   }
-}
-
-function tileBlueprintCollision(mousePos)
-{
-  var tileCollision = false;
-  tiles.forEach(function(tile){
-    if (mousePos.x >= tile.x && mousePos.x < tile.x+tile.sprite.width &&
-        mousePos.y >= tile.y && mousePos.y < tile.y+tile.sprite.height)
-      return tileCollision = true;
-  })
-  return tileCollision;
-}
-
-function mousePosToTileGrid(mousePos)
-{
-  var tileX = Math.floor((mousePos.x - gridScroll.x - 200) / TILE_SIZE);
-  var tileY = Math.floor((mousePos.y - gridScroll.y) / TILE_SIZE);
-  if (tileX >= cols || tileY >= rows || tileX < 0 || tileY < 0)
-    return undefined;
-  return tileY * cols + tileX;
 }
 
 function onMouseMove(e)
@@ -282,22 +289,7 @@ function onMouseMove(e)
   {
     if (!shiftKeyDown)
     {
-      var tile = mousePosToTileGrid(mousePos);
-      if (brush != -1 && tile != undefined)
-      {      
-        if (brushLayer == ART)
-        {
-          artTileGrid[tile] = brush;
-        }
-        else if (brushLayer == COLLISION)
-        {
-          colTileGrid[tile] = brush;
-        }
-        else
-        {
-          objTileGrid[tile] = brush;
-        }
-      } 
+      paintTile(mousePos);
     }
     else
     {
@@ -322,6 +314,37 @@ function onMouseUp(e)
 {
   mouseDown = false;
 }
+
+function paintTile(mousePos)
+{
+  var tile = mousePosToTileGrid(mousePos);
+  if (brush != -1 && tile != undefined)
+  {      
+    if (brushLayer == ART)
+    {
+      artTileGrid[tile.row][tile.col] = brush;
+    }
+    else if (brushLayer == COLLISION)
+    {
+      colTileGrid[tile.row][tile.col] = brush;
+    }
+    else
+    {
+      objTileGrid[tile.row][tile.col] = brush;
+    }
+  } 
+}
+
+function mousePosToTileGrid(mousePos)
+{
+  var tileX = Math.floor((mousePos.x - gridScroll.x - 200) / TILE_SIZE);
+  var tileY = Math.floor((mousePos.y - gridScroll.y) / TILE_SIZE);
+  if (tileX >= cols || tileY >= rows || tileX < 0 || tileY < 0)
+    return undefined;
+  return {row: tileY, col: tileX};
+}
+
+
 
 function getMousePos(evt) {
   var rect = c.getBoundingClientRect();
@@ -461,17 +484,34 @@ function copyInfo()
 
 function getRowsAndCols()
 {
-  rows = document.getElementById("rows").value;
-  cols = document.getElementById("cols").value;
-
+  var oldRows = rows;
+  var oldCols = cols;
+  rows = Number(document.getElementById("rows").value);
+  cols = Number(document.getElementById("cols").value);
+  var diffRows = rows - oldRows;
+  var diffCols = cols - oldCols;
   var newArtTileGrid = [];
-  var newColTileGrid = [];
-  for (var i=0; i<rows*cols; i++)
+  var newColTileGrid = [];  
+
+  for (var i=0; i<diffRows; i++)
   {
-    newArtTileGrid[i] = 0;
-    newColTileGrid[i] = 0;
+    console.log(rows);
+    console.log(diffRows);
+    artTileGrid[oldRows+i] = [];
+    for (var col=0; col<oldCols; col++)
+    {
+      artTileGrid[oldRows+i][col] = 0;
+    }
+    console.log(artTileGrid);
   }
-  artTileGrid = newArtTileGrid;
+  for (var i=0; i<rows; i++)
+  {
+    for (var j=0; j<diffCols; j++)
+    {
+      artTileGrid[i].push(0);
+    }
+  }
+
   colTileGrid = newColTileGrid;
   gridScroll.x = 0;
   gridScroll.y = 0;
