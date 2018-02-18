@@ -58,7 +58,6 @@ function create2DArray(rows) {
 var artTileGrid = create2DArray(rows);
 for (var i=0; i<rows; i++)
 {
-  console.log(artTileGrid[i][0]);
   for (var j=0; j<cols; j++)
   {
     artTileGrid[i][j] = images.ground.tile;
@@ -201,11 +200,10 @@ function drawObjTileGrid()
     {
       if (objTileGrid[i][j] == 1)
       {
-        console.log("D");
         var tileType = objTileGrid[i][j];
         var tileImageId = objectMap.get(tileType);
         cc.drawImage(imageMap.get(tileImageId), 200+j*TILE_SIZE+gridScroll.x, i*TILE_SIZE+gridScroll.y);
-      }      
+      }
     }
   }
 }
@@ -259,7 +257,7 @@ function onMouseDown(e)
         brushLayer = tile.layer;
         tile.border = true;
         found = true;
-        if (brush == images.player.tile)
+        if (brush == images.player.tile && brushLayer == OBJECT)
         {
           alert("Player should only be placed once");
           mouseDown = false;
@@ -437,7 +435,6 @@ function buttonPressed()
   tgElement = 0;
   elementLength = 0;
 
-      console.log(objTileGrid);
   textArea.value += "[\n\t";
   for (var i=0; i<rows; i++)
   {
@@ -493,22 +490,37 @@ function getRowsAndCols()
   var newArtTileGrid = [];
   var newColTileGrid = [];  
 
-  for (var i=0; i<diffRows; i++)
+  if (diffRows >= 0)
   {
-    console.log(rows);
-    console.log(diffRows);
-    artTileGrid[oldRows+i] = [];
-    for (var col=0; col<oldCols; col++)
+    for (var i=0; i<diffRows; i++)
     {
-      artTileGrid[oldRows+i][col] = 0;
+      artTileGrid[oldRows+i] = [];
+      for (var col=0; col<oldCols; col++)
+      {
+        artTileGrid[oldRows+i][col] = 0;
+      }
     }
-    console.log(artTileGrid);
   }
-  for (var i=0; i<rows; i++)
+  else
   {
-    for (var j=0; j<diffCols; j++)
+    artTileGrid.splice(artTileGrid.length+diffRows);
+  }
+
+  if (diffCols >= 0)
+  {
+    for (var i=0; i<rows; i++)
     {
-      artTileGrid[i].push(0);
+      for (var j=0; j<diffCols; j++)
+      {
+        artTileGrid[i].push(0);
+      }
+    }
+  }
+  else
+  {
+    for (var i=0; i<rows; i++)
+    {
+      artTileGrid[i].splice(artTileGrid[i].length+diffCols);
     }
   }
 
