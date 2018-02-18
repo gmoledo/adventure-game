@@ -19,13 +19,18 @@ images =
   sand:       "tile_sand.png",
   wall:       "tile_wall.png",
   grass:      "tile_grass.png",
+  grass1:     "tile_grass_1.png",
+  grass2:     "tile_grass_2.png",
+  grass3:     "tile_grass_3.png",
   dirt:       "tile_dirt.png",
+  dirt1:      "tile_dirt_1.png",
+  dirt2:      "tile_dirt_2.png",
   caveGround: "tile_cave_ground.png"
 };
 
 // Reference image elements through imageMap
 // E.g. use imageMap.get(images.player) to reference player image
-imageMap = new Map();
+imageMap = new Map(); 
 
 var picsToLoad = Object.keys(images).length;
 

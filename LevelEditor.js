@@ -397,7 +397,7 @@ function buttonPressed()
   {
     for (var j=0; j<cols; j++)
     {
-      tgElement = artTileGrid[i*cols + j].toString();
+      tgElement = artTileGrid[i][j].toString();
       elementLength = tgElement.length;
       for (var k=0; k<4-elementLength; k++)
       {
@@ -419,7 +419,7 @@ function buttonPressed()
   {
     for (var j=0; j<cols; j++)
     {
-      tgElement = colTileGrid[i*cols + j].toString();
+      tgElement = colTileGrid[i][j].toString();
       elementLength = tgElement.length;
       for (var k=0; k<4-elementLength; k++)
       {
@@ -440,7 +440,7 @@ function buttonPressed()
   {
     for (var j=0; j<cols; j++)
     {
-      tgElement = objTileGrid[i*cols + j].toString();
+      tgElement = objTileGrid[i][j].toString();
       elementLength = tgElement.length;
       for (var k=0; k<4-elementLength; k++)
       {
@@ -495,9 +495,13 @@ function getRowsAndCols()
     for (var i=0; i<diffRows; i++)
     {
       artTileGrid[oldRows+i] = [];
+      colTileGrid[oldRows+i] = [];
+      objTileGrid[oldRows+i] = [];
       for (var col=0; col<oldCols; col++)
       {
         artTileGrid[oldRows+i][col] = 0;
+        colTileGrid[oldRows+i][col] = 0;
+        objTileGrid[oldRows+i][col] = 0;
       }
     }
   }
@@ -513,6 +517,8 @@ function getRowsAndCols()
       for (var j=0; j<diffCols; j++)
       {
         artTileGrid[i].push(0);
+        colTileGrid[i].push(0);
+        objTileGrid[i].push(0);
       }
     }
   }
@@ -521,10 +527,11 @@ function getRowsAndCols()
     for (var i=0; i<rows; i++)
     {
       artTileGrid[i].splice(artTileGrid[i].length+diffCols);
+      colTileGrid[i].splice(colTileGrid[i].length+diffCols);
+      objTileGrid[i].splice(objTileGrid[i].length+diffCols);
     }
   }
 
-  colTileGrid = newColTileGrid;
   gridScroll.x = 0;
   gridScroll.y = 0;
 }

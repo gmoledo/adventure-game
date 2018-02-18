@@ -4,18 +4,28 @@ const TILE_SIZE = 32;
 const TILE_GROUND = 0;
 const TILE_SAND   = 1;
 const TILE_GRASS = 2;
+const TILE_GRASS_1 = 21;
+const TILE_GRASS_2 = 22;
+const TILE_GRASS_3 = 23;
 const TILE_DIRT = 3;
+const TILE_DIRT_1 = 31;
+const TILE_DIRT_2 = 32;
 const TILE_CAVE_GROUND = 4;
 
-const TILE_WALL   = 10;
+const TILE_WALL = 10;
 
 var tileToImageIdMap = new Map();
-tileToImageIdMap.set(TILE_GROUND,  images.ground);
-tileToImageIdMap.set(TILE_WALL,    images.wall);
-tileToImageIdMap.set(TILE_SAND,    images.sand);
-tileToImageIdMap.set(TILE_GRASS,   images.grass);
-tileToImageIdMap.set(TILE_DIRT,    images.dirt);
-tileToImageIdMap.set(TILE_CAVE_GROUND, images.caveGround);
+tileToImageIdMap.set(TILE_GROUND,       images.ground);
+tileToImageIdMap.set(TILE_WALL,         images.wall);
+tileToImageIdMap.set(TILE_SAND,         images.sand);
+tileToImageIdMap.set(TILE_GRASS,        images.grass);
+tileToImageIdMap.set(TILE_GRASS_1,      images.grass1);
+tileToImageIdMap.set(TILE_GRASS_2,      images.grass2);
+tileToImageIdMap.set(TILE_GRASS_3,      images.grass3);
+tileToImageIdMap.set(TILE_DIRT,         images.dirt);
+tileToImageIdMap.set(TILE_DIRT_1,       images.dirt1);
+tileToImageIdMap.set(TILE_DIRT_2,       images.dirt2);
+tileToImageIdMap.set(TILE_CAVE_GROUND,  images.caveGround);
 
 const COL_EXISTS = 1;
 
