@@ -23,22 +23,23 @@ images =
   collision:    {file: "images/tile_collision.png",     tile: 1,  type: COLLISION},
 
   noObject:     {file: "images/tile_no_object.png",     tile: 0,  type: OBJECT},
-  player:       {file: "images/character_player.png",   tile: 1,  type: OBJECT}
+  player:       {file: "images/character_player.png",   tile: 1,  type: OBJECT},
+  stick:        {file: "images/obj_stick.png",          tile: 2,  type: OBJECT}
 }
 imageMap = new Map();
 
 tiles = [];
 
 var tileMap = new Map();
+var objectMap = new Map();
 for (var imageIndex in images)
 {
   var image = images[imageIndex];
   if (image.type == ART)
     tileMap.set(image.tile, image.file);
+  if (image.type == OBJECT)
+    objectMap.set(image.tile, image.file);
 }
-
-var objectMap = new Map();
-objectMap.set(images.player.tile,   images.player.file);
 
 
 const TILE_SIZE = 32;
@@ -198,24 +199,17 @@ function drawObjTileGrid()
   {
     for (var j=0; j<objTileGrid[i].length; j++)
     {
-      if (objTileGrid[i][j] == 1)
+      if (objTileGrid[i][j] != 0)
       {
         var tileType = objTileGrid[i][j];
         var tileImageId = objectMap.get(tileType);
+        if (tileType == 2)  console.log(tileImageId);
         cc.drawImage(imageMap.get(tileImageId), 200+j*TILE_SIZE+gridScroll.x, i*TILE_SIZE+gridScroll.y);
       }
     }
   }
 }
 
-function drawBorder(x, y)
-{
-  var borderX = x - 2;
-  var borderY = y - 2;
-  cc.fillStyle = "black";
-  cc.lineWidth = 2;
-  cc.strokeRect(borderX, borderY, TILE_SIZE+4, TILE_SIZE+4);
-}
 
 function Tile()
 {
@@ -238,8 +232,17 @@ function Tile()
     cc.drawImage(this.sprite, this.x, this.y);
 
     if (this.border)
-      drawBorder(this.x, this.y);
+      drawBorder(this.x, this.y, this.sprite.width, this.sprite.height);
   }
+}
+
+function drawBorder(x, y, width, height)
+{
+  var borderX = x - 2;
+  var borderY = y - 2;
+  cc.fillStyle = "black";
+  cc.lineWidth = 2;
+  cc.strokeRect(borderX, borderY, width+4, height+4);
 }
 
 function onMouseDown(e)
@@ -341,8 +344,6 @@ function mousePosToTileGrid(mousePos)
     return undefined;
   return {row: tileY, col: tileX};
 }
-
-
 
 function getMousePos(evt) {
   var rect = c.getBoundingClientRect();

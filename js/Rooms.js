@@ -25,6 +25,8 @@ function Door(room, xFlags, yFlags, xWarp, yWarp)
 
 function changeRoom(tileX, tileY)
 {
+
+  objects = objects.filter(object => object.persistent);
   var xPass = false;
   var xWarp = 0;
   var yPass = false;
@@ -89,6 +91,8 @@ function changeRoom(tileX, tileY)
     if (xPass && yPass && !(door.xFlags == undefined && door.yFlags == undefined))
     {
       currentRoom = findRoomInRooms(door.room);
+      player.room = currentRoom;
+      initializeObjectsInRoom();
       return {xWarp: door.xWarp, yWarp: door.yWarp};
     }
     xPass = false;
@@ -113,9 +117,25 @@ function initializeObjectsInRoom()
 {
   for (var i=0; i<currentRoom.rows*currentRoom.cols; i++)
   {
-    if (currentRoom.objGrid[i] == 1)
+    switch(currentRoom.objGrid[i])
     {
-      player.init("Player", i%currentRoom.cols, Math.floor(i/currentRoom.cols));
+      case 2:
+        new Stick(i%currentRoom.cols, Math.floor(i/currentRoom.cols));
+        break;
+
+      case 3:
+        var condition = objects.filter(object => {
+          console.log(object);
+          object.tileX == i%currentRoom.cols &&
+          object.tileY == Math.floor(i/currentRoom.cols)
+        }).length == 0;
+
+        if (condition)
+        {
+          console.log("New boulder");
+          new Boulder(i%currentRoom.cols, Math.floor(i/currentRoom.cols));
+        }
+        break;
     }
   }
 }
@@ -144,9 +164,9 @@ new Room(
      0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   0,
      0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   0,
      0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   0,
-     0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   0,
-     0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   0,
-     0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   0,
+     0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   1,   0,
+     0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   1,   0,
+     0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   1,   0,
      0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   0,
      0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   0,
      0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   0,
@@ -156,12 +176,12 @@ new Room(
      0,   1,   1,   1,   1,   1,   1,   1,   1,   0,   1,   1,   1,   1,   1,   1,   1,   1,   0,
      0,   0,   0,   0,   0,   0,   0,   0,   1,   0,   1,   0,   0,   0,   0,   0,   0,   0,   0
   ],
-  [
+[
      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-     0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+     0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   2,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,
@@ -170,7 +190,7 @@ new Room(
      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-     0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+     0,   0,   0,   0,   0,   0,   0,   0,   0,   3,   0,   0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0
   ],
   [

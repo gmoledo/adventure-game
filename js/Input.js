@@ -9,6 +9,7 @@ const KEY_LETTER_S = 83;
 const KEY_LETTER_D = 68;
 const KEY_LETTER_Z = 90;
 const KEY_LETTER_T = 84;
+const KEY_LETTER_Q = 81;
 
 // Array containing objects that respond to input
 var controllables = [player, menu];
@@ -84,10 +85,14 @@ function refreshKeyInput(evt, controllable)
       }
     }
 
-    if (inputQueue[0] == cPlayer.toggleKey)
+    switch(inputQueue[0])
     {
-      cPlayer.switchControlSchemes();
-      // inputQueue.push(inputQueue.shift());
+      case cPlayer.toggleKey:
+        cPlayer.switchControlSchemes();
+        break;
+      case cPlayer.inspectKey:
+        cPlayer.inspect();
+        break;
     }
   }
 

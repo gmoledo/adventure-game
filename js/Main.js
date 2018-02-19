@@ -21,10 +21,10 @@ window.onload = function()
 function startGame()
 {
   initInput();
-  player.init("Earl");
   menu.init();
   camera.init();
   currentRoom = rooms[0];
+  player.init("Player", 9, 7);
   initializeObjectsInRoom(); // Rooms.js 
 
   setInterval(mainLoop, 1000/fps);
@@ -38,7 +38,10 @@ function mainLoop()
     player.update();
 
     drawTiles(); // Tiles.js
-    player.draw();
+    objects.forEach(object => {
+      if (currentRoom == object.room)
+        object.draw()
+    });
   }
 
   if (gameState == gameStates.MENU)

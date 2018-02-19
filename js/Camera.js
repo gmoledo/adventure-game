@@ -51,20 +51,17 @@ function Camera()
         {            //console.log("D");
             if (Math.round(this.translation.y + canvas.height+dy) > currentRoom.rows * TILE_SIZE)
             {
-                console.log("if");
                 this.translation.y = currentRoom.rows * TILE_SIZE - canvas.height;
                 canvasContext.setTransform(1,0,0,1,0,0);
                 canvasContext.translate(-this.translation.x, -this.translation.y);
             }
             else if (Math.round(this.translation.y + dy) < 0)
             {
-                console.log("else if");
                 this.translation.y = 0;
                 canvasContext.setTransform(1,0,0,1,0,0);
                 canvasContext.translate(-this.translation.x, -this.translation.y);
             }
             else{
-                console.log("else");
                 canvasContext.translate(0, -dy);
                 this.translation.y += dy
             }

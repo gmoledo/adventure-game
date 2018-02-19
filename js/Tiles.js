@@ -62,12 +62,3 @@ function drawTiles()
     tileTopEdgeY += TILE_SIZE;
   }
 }
-
-function createObjectFromTile(tile)
-{
-  switch (tile)
-  {
-    case 1:   return new Player();
-    default:  console.log("No object for this tile");
-  }
-}

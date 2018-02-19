@@ -25,7 +25,10 @@ images =
   dirt:       "tile_dirt.png",
   dirt1:      "tile_dirt_1.png",
   dirt2:      "tile_dirt_2.png",
-  caveGround: "tile_cave_ground.png"
+  caveGround: "tile_cave_ground.png",
+
+  stick:      "obj_stick.png",
+  boulder:    "obj_boulder.png"
 };
 
 // Reference image elements through imageMap

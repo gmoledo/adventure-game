@@ -16,6 +16,10 @@ function Player()
   this.walkTime = 0;
   this.walkFrame = 0;
 
+
+  this.inventory = [];
+  this.persistent = true;
+  this.room;
   // State variables
   const states = Object.freeze({
     STAND: Symbol("stand"),
@@ -35,6 +39,9 @@ function Player()
   this.eastKey;
   this.southKey;
   this.westKey;
+
+  this.inspectKey;
+
   this.toggleKey;
 
   // Whether or not key is held
@@ -44,7 +51,6 @@ function Player()
   this.westKeyHeld = false;
   this.directionKeyHeld = this.northKeyHeld || this.eastKeyHeld ||
                           this.southKeyHeld || this.westKeyHeld;
-
 
   this.walkCycleFramePattern = [1, 0, 2];
 
@@ -60,6 +66,9 @@ function Player()
     this.speed = TILE_SIZE / this.walkTime;
     this.sprite = imageMap.get(images.player);
     this.setupControls(this.controlScheme);
+    this.room = currentRoom;
+    console.log(this.room);
+    objects.push(this);
   }
 
   this.switchControlSchemes = function()
@@ -89,6 +98,7 @@ function Player()
     }
 
     this.toggleKey = KEY_LETTER_T;
+    this.inspectKey = KEY_LETTER_Q;
   }
 
   this.update = function()
@@ -150,7 +160,7 @@ function Player()
 
       this.walkFrame = 0;
 
-
+      
       if (this.tileX < 0 || this.tileX >= currentRoom.cols)
       {
         var warpPos = changeRoom(this.tileX, this.tileY);
@@ -174,6 +184,44 @@ function Player()
         this.state = states.STAND;
       }
     }
+  }
+
+  this.inspect = function()
+  {
+    if (this.state == states.STAND)
+    {
+      var inspectedObject = this.getInspectedObject();
+
+      if (inspectedObject != undefined)
+      {
+        inspectedObject.doInspection();
+      }
+      else
+      {
+        console.log("Inspected Nothing");
+      }
+    }
+  }
+
+  this.getInspectedObject = function()
+  {
+    var nextTileX = this.tileX + this.dir.x;
+    var nextTileY = this.tileY + this.dir.y;
+
+    var nextTileInGrid = tileXYToTileGrid(currentRoom, nextTileX, nextTileY);
+
+    var objectInNextTile;
+    objects.forEach(object => {
+      if (object.hasOwnProperty("tiles"))
+      {
+        object.tiles.forEach(tile => {
+          if (nextTileInGrid == tile)
+            objectInNextTile = object;
+        })
+      }
+
+    });
+    return objectInNextTile;
   }
 
   this.checkCollision = function()
