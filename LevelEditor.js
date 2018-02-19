@@ -24,7 +24,8 @@ images =
 
   noObject:     {file: "images/tile_no_object.png",     tile: 0,  type: OBJECT},
   player:       {file: "images/character_player.png",   tile: 1,  type: OBJECT},
-  stick:        {file: "images/obj_stick.png",          tile: 2,  type: OBJECT}
+  stick:        {file: "images/obj_stick.png",          tile: 2,  type: OBJECT},
+  boulder:      {file: "images/obj_Boulder.png",        tile: 3,  type: OBJECT}
 }
 imageMap = new Map();
 
